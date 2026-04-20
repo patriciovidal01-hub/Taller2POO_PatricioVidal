@@ -8,7 +8,8 @@ import java.util.Scanner;
 public class Juego {
 
 	public static Scanner s = new Scanner(System.in);
-	
+	public static String usuario;
+
 	public static void main(String[] args) {
 	// Patricio Javier Vidal Veas 22.330.827-9 ICCI
 	// Vicente Antonio Garriga Muñoz???  22.380.392-k ICCI
@@ -46,6 +47,11 @@ public class Juego {
 	
 	public static void continuar() {
 		
+		if (usuario == null) { // Si no hay usuario no entra a la partida
+			System.out.println("Usuario no encontrado");
+		} else {
+			menuJuego();
+		}
 		
 	}
 	
@@ -54,7 +60,7 @@ public class Juego {
 	public static void nuevaPartida() {
 		
 		System.out.println("Ingresa tu nombre de usuario: ");
-		String usuario = s.nextLine();
+		usuario = s.nextLine();
 		
 		try(BufferedWriter br = new BufferedWriter(new FileWriter("Registros.txt"))){ //Reescribe el archivo Registros.txt
 			br.write(usuario);
