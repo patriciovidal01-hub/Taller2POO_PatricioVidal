@@ -13,10 +13,10 @@ public class Pokemon {
 	private int velocidad;
 	private String tipo;
 	private Boolean vivo;
-	
-	
+
 	public Pokemon(String nombre, Habitat habitat, Double prc_aparición, int vida, int ataque, int defensa,
 			int atq_especial, int dfs_especial, int velocidad, String tipo) {
+
 		this.nombre = nombre;
 		this.habitat = habitat;
 		this.prc_aparición = prc_aparición;
@@ -29,9 +29,18 @@ public class Pokemon {
 		this.tipo = tipo;
 		this.vivo = true;
 	}
-	
-	
-	
-	
-	
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public Double getPrc_aparición() {
+		return prc_aparición;
+	}
+
+	public int getStats() {
+
+		return (vida + ataque + defensa + atq_especial + dfs_especial + velocidad);
+	}
+
 }
