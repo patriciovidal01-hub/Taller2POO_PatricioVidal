@@ -32,8 +32,8 @@ public class Habitat {
 		return probabilidades;
 	}
 
-	public void agregarProbabilidades() {
-		if (probabilidades.isEmpty()) {
+	public void agregarProbabilidades() { // Crea una lista con las probabilidades sumadas de los pokemons del habitat 
+		if (probabilidades.isEmpty()) {   // Ej: [0.15 - 0.30 - 0.38 - 0.46 ... - 1.00]
 
 			for (int i = 0; i < pokemons_habitat.size(); i++) {
 				double prc_aparicion = pokemons_habitat.get(i).getPrc_aparición();

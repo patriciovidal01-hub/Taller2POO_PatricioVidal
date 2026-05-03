@@ -15,12 +15,13 @@ public class Juego {
 	public static ArrayList<Pokemon> pokemons_globales = new ArrayList<Pokemon>();
 	public static ArrayList<Pokemon> equipo = new ArrayList<Pokemon>();
 	public static ArrayList<Habitat> habitats = new ArrayList<Habitat>();
+	public static ArrayList<String> medallas = new ArrayList<String>();
 
 	public static void main(String[] args) {
 		// Patricio Javier Vidal Veas 22.330.827-9 ICCI
 		// Vicente Antonio Garriga Muñoz 22.380.392-k ICCI
 
-		leerUsuario(); // Lee el archivo para ver el usuario que esta registrado
+		leerArchivo(); // Lee el archivo para ver el usuario que esta registrado
 		String op;
 
 		do {
@@ -77,8 +78,8 @@ public class Juego {
 
 	}
 
-	public static void leerUsuario() {
-		File arch = new File("Registros.txt"); // Lee el usuario ya registrado
+	public static void leerArchivo() {
+		File arch = new File("Registros.txt"); // Lee el archivo de la partida
 		Scanner s_arch;
 		try {
 			s_arch = new Scanner(arch);
@@ -86,12 +87,38 @@ public class Juego {
 			if (linea != null) { // Confirma que este la primera linea
 				String[] partes = linea.split(";");
 				usuario = partes[0];
+				if (!partes[1].equals("none")) {
+					for (int i = 1; i < partes.length; i++) {
+						medallas.add(partes[i]);
+					}
+				}
 			} else { // Si no hay usuario queda null
 				usuario = null;
+			}
+			while (s_arch.hasNextLine()) {
+				linea = s_arch.nextLine();
+				String[] partes2 = linea.split(";");
+				Pokemon pokemon_equipo = buscarPokemon(partes2[0]);
+				equipo.add(pokemon_equipo);
+				if (partes2[1].equals("Vivo")) {
+					pokemon_equipo.setVivo(true);
+				} else {
+					pokemon_equipo.setVivo(false);
+				}
+
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("La partida no se ha encontrado");
 		}
+	}
+
+	public static Pokemon buscarPokemon(String nombre) {
+		for (Pokemon pokemon : pokemons_globales) {
+			if (pokemon.getNombre().equals(nombre)) {
+				return pokemon;
+			}
+		}
+		return null;
 	}
 
 	public static void menuJuego() {
@@ -152,6 +179,11 @@ public class Juego {
 
 		if (equipo.isEmpty()) {
 			System.out.println("No hay pokemons en el equipo");
+		} else {
+			for(int i = 0; i < equipo.size(); i++) {
+				Pokemon pokemon = equipo.get(i);
+				System.out.println((i+1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: " + pokemon.getStats());
+			}
 		}
 
 	}
@@ -174,8 +206,7 @@ public class Juego {
 				int num = Integer.parseInt(op);
 				if (num < contador && num > 0) {
 					modoCaptura(habitats.get(num - 1));
-				} else {
-					System.out.println("Escriba un numero valido");
+					break;
 				}
 			} catch (Exception e) {
 				System.out.println("Por favor escriba un numero");
@@ -188,21 +219,45 @@ public class Juego {
 	}
 
 	public static void modoCaptura(Habitat habitat) {
-		habitat.agregarProbabilidades();
+		habitat.agregarProbabilidades(); // Crea una lista con las probabilidades sumadas de cada pokemon
 		double random = Math.random();
 		Pokemon pokemon_salvaje = null;
 		ArrayList<Double> probabilidades = habitat.getProbabilidades();
-		for(int i = 0; i < probabilidades.size(); i++) {
-			if (random <= probabilidades.get(i)) {
-				System.out.println(random);
-				System.out.println(probabilidades.get(i));
-				pokemon_salvaje = habitat.getPokemon(i);
+		for (int i = 0; i < probabilidades.size(); i++) { // Recorre la lista y busca donde estaria el numero creado
+															// aleatoriamente
+			if (random <= probabilidades.get(i)) { // Ej: [0.15 - 0.30 - 0.38 - 0.46 ... - 1.00], random = 0,37
+				pokemon_salvaje = habitat.getPokemon(i); // Ej: [0.15 - 0.30, 0.37 , 0.38 | 0.46 ... | 1.00],
+															// corresponde al pokemon entre esos rangos
 				break;
 			}
 		}
 		System.out.println("Un " + pokemon_salvaje.getNombre() + " salvaje ha aparecido!");
-		
-		
+		String op;
+
+		do {
+			System.out.println("¿Que deseas hacer?");
+			System.out.println("1) Capturar");
+			System.out.println("2) Huir");
+
+			op = s.nextLine();
+
+			switch (op) {
+
+			case ("1"):
+				equipo.add(pokemon_salvaje);
+				System.out.println(pokemon_salvaje.getNombre() + " fue capturado!");
+				System.out.println(pokemon_salvaje.getNombre() + " agregado al equipo.");
+				op = "2";
+				break;
+
+			case ("2"):
+				break;
+			default:
+				System.out.println("Opcion invalida");
+			}
+
+		} while (!op.equals("2"));
+
 	}
 
 	public static void cargarPokedex() {

@@ -33,6 +33,16 @@ public class Pokemon {
 	public String getNombre() {
 		return nombre;
 	}
+	
+	
+	
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setVivo(Boolean vivo) {
+		this.vivo = vivo;
+	}
 
 	public Double getPrc_aparición() {
 		return prc_aparición;
