@@ -16,6 +16,8 @@ public class Juego {
 	public static ArrayList<Pokemon> equipo = new ArrayList<Pokemon>();
 	public static ArrayList<Habitat> habitats = new ArrayList<Habitat>();
 	public static ArrayList<String> medallas = new ArrayList<String>();
+	public static ArrayList<AltoMando> altos_mandos = new ArrayList<AltoMando>();
+	public static ArrayList<Lider> lideres = new ArrayList<Lider>();
 
 	public static void main(String[] args) {
 		// Patricio Javier Vidal Veas 22.330.827-9 ICCI
@@ -120,10 +122,10 @@ public class Juego {
 	}
 
 	public static void menuJuego() {
+		cargarPokedex(); // Creacion de las instancias pokemon y habitat, se agregan a la respectiva lista.
 		cargarLideres();
 		cargarAltoMando();
-		cargarPokedex(); // Creacion de las instancias pokemon y habitat, se agregan a la respectiva
-							// lista
+
 		String op;
 
 		do {
@@ -150,6 +152,7 @@ public class Juego {
 				break;
 
 			case ("3"):
+				accesoPC();
 				break;
 
 			case ("4"):
@@ -171,10 +174,72 @@ public class Juego {
 			}
 		} while (!op.equals("8"));
 	}
-
+	
+	public static void accesoPC() {
+				
+		String op;
+		
+		do {
+			
+			for (int i = 0; i < equipo.size(); i++) {
+				Pokemon pokemon = equipo.get(i);
+				System.out.println((i + 1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: "
+						+ pokemon.getStats());
+			}
+			
+			System.out.println("1) Cambiar Pokémon.");
+			System.out.println("2) Salir.");
+			
+			op = s.nextLine();
+			
+			switch(op) {
+			
+			case("1"):
+				cambiarPokemon();
+				break;
+			case("2"):
+				break;
+			default:
+				System.out.println("Eliga una opción valida");
+			}
+			
+			
+			
+		} while(!op.equals("2"));
+		
+	}
+	
+	public static void cambiarPokemon() {
+		
+		int op = 0;
+		int op2 = 0;
+		
+		try {
+			
+			System.out.println("¿Que pokémon desea cambiar?, Escriba el numero de la lista");
+			op = Integer.parseInt(s.nextLine());
+			
+			System.out.println("¿Por que pokemon lo desea cambiar?, Escriba el numero de la lista");
+			op2 = Integer.parseInt(s.nextLine());
+			
+		} catch(Exception e) {
+			System.out.println("Opcion invalida");
+		}
+		
+		if(op > 0 && op <= equipo.size() && (op2 > 0 && op2 <= equipo.size())) {
+			Pokemon pokemon_mover = equipo.get(op-1);
+			equipo.set((op-1), equipo.get(op2-1));
+			equipo.set((op2-1), pokemon_mover);
+			
+		} else {
+			System.out.println("No existe un pokemon en ese numero");
+		}
+		
+	}
+	
+	
+	
 	public static void revisarEquipo() {
-		// HABRIA QUE TENER UN LEER EQUIPO EN EL ARCHIVO PARA QUE SE GUARDE BIEN LOS
-		// DATOS Y PODER CONTINUAR
 
 		if (equipo.isEmpty()) {
 			System.out.println("No hay pokemons en el equipo");
@@ -217,7 +282,7 @@ public class Juego {
 		System.out.println("Volviendo al menu...");
 
 	}
-
+	
 	public static void modoCaptura(Habitat habitat) {
 		habitat.agregarProbabilidades(); // Crea una lista con las probabilidades sumadas de cada pokemon
 		double random = Math.random();
@@ -280,7 +345,7 @@ public class Juego {
 				}
 
 				Lider lider_gimnasio = new Lider(nombre, derrotado, num_gim);
-
+				lideres.add(lider_gimnasio);
 				int cantidad_pokemons = Integer.parseInt(partes[3]);
 
 				for (int i = 0; i < cantidad_pokemons; i++) {
@@ -297,7 +362,7 @@ public class Juego {
 	}
 
 	public static void cargarAltoMando() {
-		File arch = new File("Gimnasios.txt");
+		File arch = new File("Alto Mando.txt");
 		Scanner s_arch;
 
 		try {
@@ -309,12 +374,12 @@ public class Juego {
 				String nombre = partes[1];
 
 				AltoMando alto_mando = new AltoMando(nombre, false, num_mando);
-				for (int i = 0; i < 6; i++) {
-					String nombre_pokemon = partes[i + 2];
+				altos_mandos.add(alto_mando);
+				for (int i = 2; i < partes.length; i++) {
+					String nombre_pokemon = partes[i];
 					Pokemon pokemon_mando = buscarPokemon(nombre_pokemon);
 					alto_mando.agregarPokemon(pokemon_mando);
 				}
-
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("No se pudo cargar la pokedex");
