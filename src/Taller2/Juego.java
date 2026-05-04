@@ -100,9 +100,7 @@ public class Juego {
 				String[] partes2 = linea.split(";");
 				Pokemon pokemon_equipo = buscarPokemon(partes2[0]);
 				equipo.add(pokemon_equipo);
-				if (partes2[1].equals("Vivo")) {
-					pokemon_equipo.setVivo(true);
-				} else {
+				if (partes2[1].equals("Derrotado")) {
 					pokemon_equipo.setVivo(false);
 				}
 
@@ -122,7 +120,8 @@ public class Juego {
 	}
 
 	public static void menuJuego() {
-
+		cargarLideres();
+		cargarAltoMando();
 		cargarPokedex(); // Creacion de las instancias pokemon y habitat, se agregan a la respectiva
 							// lista
 		String op;
@@ -180,9 +179,10 @@ public class Juego {
 		if (equipo.isEmpty()) {
 			System.out.println("No hay pokemons en el equipo");
 		} else {
-			for(int i = 0; i < equipo.size(); i++) {
+			for (int i = 0; i < equipo.size(); i++) {
 				Pokemon pokemon = equipo.get(i);
-				System.out.println((i+1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: " + pokemon.getStats());
+				System.out.println((i + 1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: "
+						+ pokemon.getStats());
 			}
 		}
 
@@ -257,6 +257,68 @@ public class Juego {
 			}
 
 		} while (!op.equals("2"));
+
+	}
+
+	public static void cargarLideres() {
+		File arch = new File("Gimnasios.txt");
+		Scanner s_arch;
+
+		try {
+			s_arch = new Scanner(arch);
+			while (s_arch.hasNextLine()) { // Creacion de las instancias Lider
+				String linea = s_arch.nextLine();
+				String[] partes = linea.split(";");
+				int num_gim = Integer.parseInt(partes[0]);
+				String nombre = partes[1];
+				String estado = partes[2];
+				boolean derrotado;
+				if (estado.equals("Sin derrotar")) {
+					derrotado = false;
+				} else {
+					derrotado = true;
+				}
+
+				Lider lider_gimnasio = new Lider(nombre, derrotado, num_gim);
+
+				int cantidad_pokemons = Integer.parseInt(partes[3]);
+
+				for (int i = 0; i < cantidad_pokemons; i++) {
+					String nombre_pokemon = partes[i + 4];
+					Pokemon pokemon_lider = buscarPokemon(nombre_pokemon);
+					lider_gimnasio.agregarPokemon(pokemon_lider);
+				}
+
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("No se pudo cargar la pokedex");
+		}
+
+	}
+
+	public static void cargarAltoMando() {
+		File arch = new File("Gimnasios.txt");
+		Scanner s_arch;
+
+		try {
+			s_arch = new Scanner(arch);
+			while (s_arch.hasNextLine()) { // Creacion de las instancias AltoMando
+				String linea = s_arch.nextLine();
+				String[] partes = linea.split(";");
+				int num_mando = Integer.parseInt(partes[0]);
+				String nombre = partes[1];
+
+				AltoMando alto_mando = new AltoMando(nombre, false, num_mando);
+				for (int i = 0; i < 6; i++) {
+					String nombre_pokemon = partes[i + 2];
+					Pokemon pokemon_mando = buscarPokemon(nombre_pokemon);
+					alto_mando.agregarPokemon(pokemon_mando);
+				}
+
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("No se pudo cargar la pokedex");
+		}
 
 	}
 
