@@ -30,6 +30,12 @@ public class AltoMando {
 	public void setPokemons_mando(ArrayList<Pokemon> pokemons_mando) {
 		this.pokemons_mando = pokemons_mando;
 	}
+
+
+	public String getNombre() {
+		return nombre;
+	}
+
 	
 	
 	

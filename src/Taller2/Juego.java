@@ -84,7 +84,7 @@ public class Juego {
 		} catch (IOException e) {
 			System.out.println("Archivo no encontrado");
 		}
-		
+
 		equipo.clear();
 		medallas.clear();
 
@@ -186,41 +186,98 @@ public class Juego {
 			}
 		} while (!op.equals("8"));
 	}
-	
-	public static void guardar() {
 
-		try (BufferedWriter br = new BufferedWriter(new FileWriter("Registros.txt"))) { // Reescribe el archivo
-			// Registros.txt
-			br.write(usuario);
-			if (medallas.isEmpty()) {
-				br.write(";none");
-			} else {
-				for (String medalla : medallas) {
-					br.write(";" + medalla);
-				}
-			}
+	public static void retarAltoMando() {
 
-			if (!equipo.isEmpty()) {
-				for (Pokemon pokemon : equipo) {
-					br.newLine();
-					String derrotado = "";
-					if (pokemon.getVivo() == true) {
-						derrotado = "Vivo";
-					} else {
-						derrotado = "Derrotado";
-					}
-
-					br.write(pokemon.getNombre() + ";" + derrotado);
-				}
-			}
-
-		} catch (IOException e) {
-			System.out.println("Archivo no encontrado");
+		if (equipo.isEmpty()) {
+			System.out.println("No tienes pokemons para luchar");
+		} else if (medallas.size() > 8) {
+			System.out.println("Debes derrotar a todos los lideres de gimnasio primero");
+		} else {
+			pelearAltoMando();
 		}
 
 	}
-	
-	
+
+	public static void pelearAltoMando() {
+		
+		boolean derrota = false;
+		int contador_victorias = 0;
+		for (int j = 0; j < altos_mandos.size(); j++) {
+			if(derrota == true) {
+				break;
+			}
+			
+			String op;
+			ArrayList<Pokemon> equipo_mando = altos_mandos.get(j).getPokemons_mando();
+			AltoMando mando = altos_mandos.get(j);
+			contador_pklider = 0;
+			contador_pkmio = 0;
+
+			for (int i = 0; i < equipo.size(); i++) {
+				if (equipo.get(i) != null) {
+					if (!equipo.get(i).getVivo()) {
+						contador_pkmio++;
+					}
+				}
+
+				if (i == 5) {
+					break;
+				}
+			}
+
+			do {
+
+				if (contador_pklider == equipo_mando.size()) {
+					System.out.println("Has ganado a " + mando.getNombre());
+					contador_victorias++;
+					break;
+				}
+				if (equipo.size() > 6) {
+					if (contador_pkmio == 6) {
+						System.out.println("Perdiste :( volviendo al menu...");
+						derrota = true;
+						break;
+					}
+				} else {
+					if (contador_pkmio == equipo.size()) {
+						System.out.println("Perdiste :( volviendo al menu...");
+						derrota = true;
+						break;
+					}
+
+				}
+
+				System.out.println(mando.getNombre() + " saca a " + equipo_mando.get(contador_pklider).getNombre() + "!");
+				System.out.println(usuario + " saca a " + equipo.get(contador_pkmio).getNombre() + "!");
+
+				System.out.println("¿Que deseas hacer?");
+				System.out.println("1) Atacar");
+				System.out.println("2) Cambiar de pokemon");
+				System.out.println("3) Rendirse");
+
+				op = s.nextLine();
+
+				switch (op) {
+
+				case ("1"):
+					atacar(equipo_mando.get(contador_pklider), equipo.get(contador_pkmio));
+					break;
+				case ("2"):
+					cambiarPokemonBatalla();
+					break;
+				case ("3"):
+					System.out.println("Te rindes, volviendo al menu...");
+					break;
+
+				default:
+					System.out.println("Eliga una opción valida");
+				}
+
+			} while (!op.equals("3"));
+		}
+	}
+
 	public static void guardar() {
 
 		try (BufferedWriter br = new BufferedWriter(new FileWriter("Registros.txt"))) { // Reescribe el archivo
@@ -539,17 +596,17 @@ public class Juego {
 
 			for (int j = 0; j < equipo.size(); j++) {
 				Pokemon pokemon = equipo.get(j);
-				
-				if(contador2 == 6) {
+
+				if (contador2 == 6) {
 					break;
 				}
-				
+
 				if (pokemon.getVivo()) {
-					System.out.println((j+1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: "
+					System.out.println((j + 1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: "
 							+ pokemon.getStats());
 
 				} else {
-					System.out.println((j+1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: "
+					System.out.println((j + 1) + ") " + pokemon.getNombre() + " | " + pokemon.getTipo() + " | Stats: "
 							+ pokemon.getStats() + " | Derrotado");
 				}
 				contador2++;
@@ -680,25 +737,25 @@ public class Juego {
 			System.out.println("2) Huir");
 
 			op = s.nextLine();
-			
+
 			boolean capturado = false;
-			
+
 			switch (op) {
 
 			case ("1"):
-				for(Pokemon pokemon : equipo) {
-					if(pokemon.getNombre().equals(pokemon_salvaje.getNombre())) {
+				for (Pokemon pokemon : equipo) {
+					if (pokemon.getNombre().equals(pokemon_salvaje.getNombre())) {
 						System.out.println("Ya has capturado ese pokemon, no puedes capturarlo denuevo");
 						capturado = true;
 						break;
 					}
 				}
-			
-				if(capturado == false) {
-				equipo.add(pokemon_salvaje);
-				System.out.println(pokemon_salvaje.getNombre() + " fue capturado!");
-				System.out.println(pokemon_salvaje.getNombre() + " agregado al equipo.");
-				op = "2";
+
+				if (capturado == false) {
+					equipo.add(pokemon_salvaje);
+					System.out.println(pokemon_salvaje.getNombre() + " fue capturado!");
+					System.out.println(pokemon_salvaje.getNombre() + " agregado al equipo.");
+					op = "2";
 				}
 				break;
 
