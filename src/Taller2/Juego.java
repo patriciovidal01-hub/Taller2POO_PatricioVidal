@@ -191,8 +191,8 @@ public class Juego {
 
 		if (equipo.isEmpty()) {
 			System.out.println("No tienes pokemons para luchar");
-		} else if (medallas.size() > 8) {
-			System.out.println("Debes derrotar a todos los lideres de gimnasio primero");
+		} else if (medallas.size() < 8) {
+			System.out.println("Debes derrotar a todos los lideres de gimnasio primero.");
 		} else {
 			pelearAltoMando();
 		}
@@ -202,7 +202,6 @@ public class Juego {
 	public static void pelearAltoMando() {
 		
 		boolean derrota = false;
-		int contador_victorias = 0;
 		for (int j = 0; j < altos_mandos.size(); j++) {
 			if(derrota == true) {
 				break;
@@ -230,7 +229,6 @@ public class Juego {
 
 				if (contador_pklider == equipo_mando.size()) {
 					System.out.println("Has ganado a " + mando.getNombre());
-					contador_victorias++;
 					break;
 				}
 				if (equipo.size() > 6) {
@@ -268,6 +266,7 @@ public class Juego {
 					break;
 				case ("3"):
 					System.out.println("Te rindes, volviendo al menu...");
+					derrota = true;
 					break;
 
 				default:
@@ -275,6 +274,24 @@ public class Juego {
 				}
 
 			} while (!op.equals("3"));
+		}
+		int l = 0;
+		if(derrota != true) {
+			System.out.println("FELICIDADES ERES EL NUEVO MAESTRO POKEMON!!!!");
+			for(Pokemon pokemon : equipo) {
+				System.out.println(pokemon.getNombre() + "!");
+				l++;
+				if (l == 6) {
+					break;
+				}
+			}
+			System.out.println("");
+			System.out.println("Ya no hay más adelante de tu aventura, conseguiste el mayor logro, enhorabuena!");
+			System.out.println("");
+			
+			
+			
+			
 		}
 	}
 
