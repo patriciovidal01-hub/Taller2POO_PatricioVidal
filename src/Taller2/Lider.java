@@ -18,6 +18,31 @@ public class Lider {
 	public void agregarPokemon(Pokemon pokemon) {
 		pokemons_lider.add(pokemon);
 	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public Boolean getDerrotado() {
+		return derrotado;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setDerrotado(Boolean derrotado) {
+		this.derrotado = derrotado;
+	}
+
+	public ArrayList<Pokemon> getPokemons_lider() {
+		return pokemons_lider;
+	}
+
+	public void setPokemons_lider(ArrayList<Pokemon> pokemons_lider) {
+		this.pokemons_lider = pokemons_lider;
+	}
+	
 	
 	
 }

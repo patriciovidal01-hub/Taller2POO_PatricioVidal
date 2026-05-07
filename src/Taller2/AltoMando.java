@@ -20,5 +20,17 @@ public class AltoMando {
 	public void agregarPokemon(Pokemon pokemon) {
 		pokemons_mando.add(pokemon);
 	}
+
+
+	public ArrayList<Pokemon> getPokemons_mando() {
+		return pokemons_mando;
+	}
+
+
+	public void setPokemons_mando(ArrayList<Pokemon> pokemons_mando) {
+		this.pokemons_mando = pokemons_mando;
+	}
+	
+	
 	
 }

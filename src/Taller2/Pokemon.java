@@ -29,6 +29,14 @@ public class Pokemon {
 		this.tipo = tipo;
 		this.vivo = true;
 	}
+	
+	
+	
+	public Boolean getVivo() {
+		return vivo;
+	}
+
+
 
 	public String getNombre() {
 		return nombre;
